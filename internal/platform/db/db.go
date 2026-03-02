@@ -10,9 +10,7 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-type DB struct {
-	Gorm *gorm.DB
-}
+type DB struct{ Gorm *gorm.DB }
 
 func New(ctx context.Context, dsn string, isDev bool) (*DB, error) {
 	cfg := &gorm.Config{}

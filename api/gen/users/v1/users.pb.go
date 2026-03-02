@@ -1,11 +1,11 @@
 package usersv1
 
 type User struct {
-	Id               string `json:"id,omitempty"`
-	Email            string `json:"email,omitempty"`
-	Name             string `json:"name,omitempty"`
-	CreatedAtRfc3339 string `json:"created_at_rfc3339,omitempty"`
-	UpdatedAtRfc3339 string `json:"updated_at_rfc3339,omitempty"`
+	Id               string
+	Email            string
+	Name             string
+	CreatedAtRfc3339 string
+	UpdatedAtRfc3339 string
 }
 
 type CreateUserRequest struct{ Email, Name string }

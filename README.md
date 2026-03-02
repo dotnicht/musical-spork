@@ -1,12 +1,13 @@
-# Go gRPC API (DDD + CQRS + Modular Monolith) + Postgres (GORM)
+# Go API: gRPC + REST(JSON) side-by-side (DDD + CQRS + Modular Monolith) + Postgres (GORM)
 
 This scaffold demonstrates:
-- **Modular monolith** with multiple modules (bounded contexts): `users` and `accounts`
-- **DDD** layers per module: `domain / application / infrastructure / interfaces`
-- **CQRS** separation: commands vs queries handlers
-- **In-process module communication** via **public contracts** (`internal/modules/users/public`)
-- **gRPC** API endpoints for both modules
-- **Postgres** persistence via **GORM**
+- **Modular monolith** with multiple bounded contexts: `users` and `accounts`
+- **DDD** per module: `domain / application / infrastructure / interfaces`
+- **CQRS**: commands and queries handlers
+- **Two transports side-by-side**:
+  - gRPC (for internal/high-performance clients)
+  - REST/JSON over HTTP (for non-gRPC clients)
+- Transport adapters are **thin**: they only map requests -> application commands/queries and map errors.
 
 ## Quick start
 ```bash
@@ -15,23 +16,27 @@ go mod tidy
 go run ./cmd/server
 ```
 
-## Users (grpcurl)
+### gRPC
+- listens on `:50051` by default
+
+### REST/JSON
+- listens on `:8080` by default
+
+## REST endpoints (Users)
+- `POST /v1/users`
+- `GET /v1/users/{id}`
+- `GET /v1/users?limit=50&offset=0`
+- `PATCH /v1/users/{id}`
+- `DELETE /v1/users/{id}`
+
+Example:
 ```bash
-grpcurl -plaintext localhost:50051 api.users.v1.UsersService/CreateUser -d '{"email":"a@b.com","name":"Alice"}'
-grpcurl -plaintext localhost:50051 api.users.v1.UsersService/ListUsers -d '{"limit":50,"offset":0}'
+curl -s -X POST http://localhost:8080/v1/users \
+  -H 'content-type: application/json' \
+  -d '{"email":"a@b.com","name":"Alice"}'
+
+curl -s http://localhost:8080/v1/users?limit=50&offset=0
 ```
 
-## Accounts (grpcurl)
-Accounts are created **for an existing user** (accounts module calls users module in-process via an interface).
-```bash
-# create user, grab id
-grpcurl -plaintext localhost:50051 api.users.v1.UsersService/CreateUser -d '{"email":"x@y.com","name":"X"}'
-
-# create account for that user id
-grpcurl -plaintext localhost:50051 api.accounts.v1.AccountsService/CreateAccount -d '{"user_id":"<user-id>","label":"Primary"}'
-```
-
-## Module boundaries (important idea)
-- `accounts` depends on `users/public` **only** (a narrow contract).
-- `accounts` does NOT import `users/domain` or `users/infrastructure` or `users/interfaces`.
-
+## Accounts module boundary
+`accounts` calls `users` **in-process via contract** `internal/modules/users/public` only.

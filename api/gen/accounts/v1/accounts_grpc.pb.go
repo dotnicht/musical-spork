@@ -8,11 +8,11 @@ import (
 )
 
 const (
-	AccountsService_CreateAccount_FullMethodName    = "/api.accounts.v1.AccountsService/CreateAccount"
-	AccountsService_GetAccount_FullMethodName       = "/api.accounts.v1.AccountsService/GetAccount"
+	AccountsService_CreateAccount_FullMethodName      = "/api.accounts.v1.AccountsService/CreateAccount"
+	AccountsService_GetAccount_FullMethodName         = "/api.accounts.v1.AccountsService/GetAccount"
 	AccountsService_ListAccountsByUser_FullMethodName = "/api.accounts.v1.AccountsService/ListAccountsByUser"
-	AccountsService_UpdateAccount_FullMethodName    = "/api.accounts.v1.AccountsService/UpdateAccount"
-	AccountsService_DeleteAccount_FullMethodName    = "/api.accounts.v1.AccountsService/DeleteAccount"
+	AccountsService_UpdateAccount_FullMethodName      = "/api.accounts.v1.AccountsService/UpdateAccount"
+	AccountsService_DeleteAccount_FullMethodName      = "/api.accounts.v1.AccountsService/DeleteAccount"
 )
 
 type AccountsServiceServer interface {

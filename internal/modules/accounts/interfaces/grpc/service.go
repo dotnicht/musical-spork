@@ -24,44 +24,32 @@ func New(h service.Handlers) *Service { return &Service{h: h} }
 
 func (s *Service) CreateAccount(ctx context.Context, req *accountsv1.CreateAccountRequest) (*accountsv1.CreateAccountResponse, error) {
 	id, err := s.h.Create.Handle(ctx, commands.CreateAccountCommand{UserID: req.UserId, Label: req.Label})
-	if err != nil {
-		return nil, mapErr(err)
-	}
+	if err != nil { return nil, mapErr(err) }
 	return &accountsv1.CreateAccountResponse{Id: id}, nil
 }
 
 func (s *Service) GetAccount(ctx context.Context, req *accountsv1.GetAccountRequest) (*accountsv1.GetAccountResponse, error) {
 	dto, err := s.h.Get.Handle(ctx, queries.GetAccountQuery{ID: req.Id})
-	if err != nil {
-		return nil, mapErr(err)
-	}
+	if err != nil { return nil, mapErr(err) }
 	return &accountsv1.GetAccountResponse{Account: toProto(dto)}, nil
 }
 
 func (s *Service) ListAccountsByUser(ctx context.Context, req *accountsv1.ListAccountsByUserRequest) (*accountsv1.ListAccountsByUserResponse, error) {
 	dtos, err := s.h.ListByUser.Handle(ctx, queries.ListAccountsByUserQuery{UserID: req.UserId, Limit: req.Limit, Offset: req.Offset})
-	if err != nil {
-		return nil, mapErr(err)
-	}
+	if err != nil { return nil, mapErr(err) }
 	out := make([]*accountsv1.Account, 0, len(dtos))
-	for _, d := range dtos {
-		out = append(out, toProto(d))
-	}
+	for _, d := range dtos { out = append(out, toProto(d)) }
 	return &accountsv1.ListAccountsByUserResponse{Accounts: out}, nil
 }
 
 func (s *Service) UpdateAccount(ctx context.Context, req *accountsv1.UpdateAccountRequest) (*accountsv1.UpdateAccountResponse, error) {
 	cmd := commands.UpdateAccountCommand{ID: req.Id, Label: req.Label}
-	if err := s.h.Update.Handle(ctx, cmd); err != nil {
-		return nil, mapErr(err)
-	}
+	if err := s.h.Update.Handle(ctx, cmd); err != nil { return nil, mapErr(err) }
 	return &accountsv1.UpdateAccountResponse{}, nil
 }
 
 func (s *Service) DeleteAccount(ctx context.Context, req *accountsv1.DeleteAccountRequest) (*accountsv1.DeleteAccountResponse, error) {
-	if err := s.h.Delete.Handle(ctx, commands.DeleteAccountCommand{ID: req.Id}); err != nil {
-		return nil, mapErr(err)
-	}
+	if err := s.h.Delete.Handle(ctx, commands.DeleteAccountCommand{ID: req.Id}); err != nil { return nil, mapErr(err) }
 	return &accountsv1.DeleteAccountResponse{}, nil
 }
 

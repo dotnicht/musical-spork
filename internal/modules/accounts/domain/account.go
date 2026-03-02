@@ -9,9 +9,9 @@ import (
 )
 
 var (
-	ErrAccountNotFound  = errors.New("account not found")
+	ErrAccountNotFound     = errors.New("account not found")
 	ErrInvalidAccountLabel = errors.New("invalid account label")
-	ErrUserDoesNotExist = errors.New("user does not exist")
+	ErrUserDoesNotExist    = errors.New("user does not exist")
 )
 
 type AccountID string
@@ -55,11 +55,11 @@ func RehydrateAccount(id AccountID, userID, label string, createdAt, updatedAt t
 	}
 }
 
-func (a *Account) ID() AccountID           { return a.id }
-func (a *Account) UserID() string          { return a.userID }
-func (a *Account) Label() string           { return a.label }
-func (a *Account) CreatedAt() time.Time    { return a.createdAt }
-func (a *Account) UpdatedAt() time.Time    { return a.updatedAt }
+func (a *Account) ID() AccountID        { return a.id }
+func (a *Account) UserID() string       { return a.userID }
+func (a *Account) Label() string        { return a.label }
+func (a *Account) CreatedAt() time.Time { return a.createdAt }
+func (a *Account) UpdatedAt() time.Time { return a.updatedAt }
 
 func (a *Account) Relabel(label string) error {
 	label = strings.TrimSpace(label)
