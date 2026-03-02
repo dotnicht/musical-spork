@@ -7,4 +7,5 @@ proto:
 		-I $(PROTO_DIR) \
 		--go_out=$(GEN_DIR) --go_opt=paths=source_relative \
 		--go-grpc_out=$(GEN_DIR) --go-grpc_opt=paths=source_relative \
-		$(PROTO_DIR)/users/v1/users.proto
+		$(PROTO_DIR)/users/v1/users.proto \
+		$(PROTO_DIR)/accounts/v1/accounts.proto

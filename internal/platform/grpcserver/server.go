@@ -37,8 +37,7 @@ func New(addr string, opts ...grpc.ServerOption) (*Server, error) {
 }
 
 func (s *Server) GRPC() *grpc.Server { return s.grpc }
-
-func (s *Server) Serve() error { return s.grpc.Serve(s.ln) }
+func (s *Server) Serve() error       { return s.grpc.Serve(s.ln) }
 
 func (s *Server) Stop(ctx context.Context) error {
 	stopped := make(chan struct{})

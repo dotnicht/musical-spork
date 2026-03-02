@@ -1,11 +1,7 @@
-// Code generated (scaffold).
-// Regenerate with protoc in real projects.
-
 package usersv1
 
 import (
 	"context"
-
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -18,49 +14,6 @@ const (
 	UsersService_UpdateUser_FullMethodName = "/api.users.v1.UsersService/UpdateUser"
 	UsersService_DeleteUser_FullMethodName = "/api.users.v1.UsersService/DeleteUser"
 )
-
-type UsersServiceClient interface {
-	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
-	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error)
-	ListUsers(ctx context.Context, in *ListUsersRequest, opts ...grpc.CallOption) (*ListUsersResponse, error)
-	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error)
-	DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*DeleteUserResponse, error)
-}
-
-type usersServiceClient struct{ cc grpc.ClientConnInterface }
-
-func NewUsersServiceClient(cc grpc.ClientConnInterface) UsersServiceClient { return &usersServiceClient{cc} }
-
-func (c *usersServiceClient) CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error) {
-	out := new(CreateUserResponse)
-	err := c.cc.Invoke(ctx, UsersService_CreateUser_FullMethodName, in, out, opts...)
-	if err != nil { return nil, err }
-	return out, nil
-}
-func (c *usersServiceClient) GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error) {
-	out := new(GetUserResponse)
-	err := c.cc.Invoke(ctx, UsersService_GetUser_FullMethodName, in, out, opts...)
-	if err != nil { return nil, err }
-	return out, nil
-}
-func (c *usersServiceClient) ListUsers(ctx context.Context, in *ListUsersRequest, opts ...grpc.CallOption) (*ListUsersResponse, error) {
-	out := new(ListUsersResponse)
-	err := c.cc.Invoke(ctx, UsersService_ListUsers_FullMethodName, in, out, opts...)
-	if err != nil { return nil, err }
-	return out, nil
-}
-func (c *usersServiceClient) UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error) {
-	out := new(UpdateUserResponse)
-	err := c.cc.Invoke(ctx, UsersService_UpdateUser_FullMethodName, in, out, opts...)
-	if err != nil { return nil, err }
-	return out, nil
-}
-func (c *usersServiceClient) DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*DeleteUserResponse, error) {
-	out := new(DeleteUserResponse)
-	err := c.cc.Invoke(ctx, UsersService_DeleteUser_FullMethodName, in, out, opts...)
-	if err != nil { return nil, err }
-	return out, nil
-}
 
 type UsersServiceServer interface {
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)

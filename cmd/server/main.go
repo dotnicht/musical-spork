@@ -8,10 +8,18 @@ import (
 	"syscall"
 	"time"
 
+	accountsv1 "example.com/modmonolith/api/gen/accounts/v1"
 	usersv1 "example.com/modmonolith/api/gen/users/v1"
-	"example.com/modmonolith/internal/modules/users/application/service"
-	"example.com/modmonolith/internal/modules/users/infrastructure/gormrepo"
+
+	accountsapp "example.com/modmonolith/internal/modules/accounts/application/service"
+	accountsgorm "example.com/modmonolith/internal/modules/accounts/infrastructure/gormrepo"
+	accountsgrpc "example.com/modmonolith/internal/modules/accounts/interfaces/grpc"
+
+	usersapp "example.com/modmonolith/internal/modules/users/application/service"
+	usersgorm "example.com/modmonolith/internal/modules/users/infrastructure/gormrepo"
 	usersgrpc "example.com/modmonolith/internal/modules/users/interfaces/grpc"
+	userspublic "example.com/modmonolith/internal/modules/users/public"
+
 	"example.com/modmonolith/internal/platform/config"
 	"example.com/modmonolith/internal/platform/db"
 	"example.com/modmonolith/internal/platform/grpcserver"
@@ -25,7 +33,6 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	isDev := cfg.Env != "prod"
 
 	dbConn, err := db.New(ctx, cfg.PostgresDSN, isDev)
@@ -33,14 +40,26 @@ func main() {
 		log.Fatal(err)
 	}
 
-	userRepo := gormrepo.New(dbConn.Gorm)
-	if err := userRepo.AutoMigrate(ctx); err != nil {
+	// --- Users module
+	usersRepo := usersgorm.New(dbConn.Gorm)
+	if err := usersRepo.AutoMigrate(ctx); err != nil {
 		log.Fatal(err)
 	}
-
-	usersHandlers := service.NewHandlers(userRepo)
+	usersHandlers := usersapp.NewHandlers(usersRepo)
 	usersSvc := usersgrpc.New(usersHandlers)
 
+	// Public contract adapter for other modules (in-process call)
+	userReader := userspublic.NewUserReader(usersHandlers.Get)
+
+	// --- Accounts module (depends on users via public contract only)
+	accountsRepo := accountsgorm.New(dbConn.Gorm)
+	if err := accountsRepo.AutoMigrate(ctx); err != nil {
+		log.Fatal(err)
+	}
+	accountsHandlers := accountsapp.NewHandlers(accountsRepo, userReader)
+	accountsSvc := accountsgrpc.New(accountsHandlers)
+
+	// --- gRPC server
 	srv, err := grpcserver.New(cfg.GRPCAddr,
 		grpcserver.UnaryChain(
 			grpcserver.UnaryRecovery(),
@@ -52,6 +71,7 @@ func main() {
 	}
 
 	usersv1.RegisterUsersServiceServer(srv.GRPC(), usersSvc)
+	accountsv1.RegisterAccountsServiceServer(srv.GRPC(), accountsSvc)
 
 	go func() {
 		log.Printf("gRPC listening on %s", cfg.GRPCAddr)

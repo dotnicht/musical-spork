@@ -20,19 +20,13 @@ message User {
   string updated_at_rfc3339 = 5;
 }
 
-message CreateUserRequest {
-  string email = 1;
-  string name = 2;
-}
+message CreateUserRequest { string email = 1; string name = 2; }
 message CreateUserResponse { string id = 1; }
 
 message GetUserRequest { string id = 1; }
 message GetUserResponse { User user = 1; }
 
-message ListUsersRequest {
-  int32 limit = 1;
-  int32 offset = 2;
-}
+message ListUsersRequest { int32 limit = 1; int32 offset = 2; }
 message ListUsersResponse { repeated User users = 1; }
 
 message UpdateUserRequest {

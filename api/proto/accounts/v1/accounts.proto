@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package api.accounts.v1;
+
+option go_package = "example.com/modmonolith/api/gen/accounts/v1;accountsv1";
+
+service AccountsService {
+  rpc CreateAccount(CreateAccountRequest) returns (CreateAccountResponse);
+  rpc GetAccount(GetAccountRequest) returns (GetAccountResponse);
+  rpc ListAccountsByUser(ListAccountsByUserRequest) returns (ListAccountsByUserResponse);
+  rpc UpdateAccount(UpdateAccountRequest) returns (UpdateAccountResponse);
+  rpc DeleteAccount(DeleteAccountRequest) returns (DeleteAccountResponse);
+}
+
+message Account {
+  string id = 1;
+  string user_id = 2;
+  string label = 3;
+  string created_at_rfc3339 = 4;
+  string updated_at_rfc3339 = 5;
+}
+
+message CreateAccountRequest { string user_id = 1; string label = 2; }
+message CreateAccountResponse { string id = 1; }
+
+message GetAccountRequest { string id = 1; }
+message GetAccountResponse { Account account = 1; }
+
+message ListAccountsByUserRequest { string user_id = 1; int32 limit = 2; int32 offset = 3; }
+message ListAccountsByUserResponse { repeated Account accounts = 1; }
+
+message UpdateAccountRequest { string id = 1; optional string label = 2; }
+message UpdateAccountResponse {}
+
+message DeleteAccountRequest { string id = 1; }
+message DeleteAccountResponse {}
